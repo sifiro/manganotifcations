@@ -28,8 +28,8 @@ public class Main {
     public void go() throws Exception{
     	Document manga;
     	for (int i=0;i<coll.size();i++){
-    		manga = clear(page(pages[0].substring(0)+coll.get(i).getID().substring(0)));
-    		System.out.println(coll.get(i).getName()+": "+get_vol(manga,cod[0]));
+    		manga = clear(page(pages[coll.get(i).getSite()].substring(0)+coll.get(i).getID().substring(0)));
+    		System.out.println(coll.get(i).getName()+": "+get_vol(manga,cod[coll.get(i).getSite()]));
     	}	
     }
     
@@ -47,9 +47,9 @@ public class Main {
     
     public static void main(String[] args)throws Exception {
     	// Add Example Manga
-    	coll.add(new Manga("Hayate no Gotoku!","778",0));
-    	coll.add(new Manga("Jojo","162",0));
-    	coll.add(new Manga("INVALID","99999999",0));
+    	coll.add(new Manga(0,"Hayate no Gotoku!","778",0,0));
+    	coll.add(new Manga(0,"Jojo","162",0,0));
+    	coll.add(new Manga(0,"INVALID","99999999",0,0));
     	new Main().go();
     	
     }
