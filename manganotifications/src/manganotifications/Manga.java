@@ -3,8 +3,9 @@ package manganotifications;
 public class Manga {
 private String name;
 private String ID;
-
 private int vol;
+private int user_vol;
+
 public Manga(String name,String ID,int vol){
 	this.setID(ID);
 	this.setName(name);

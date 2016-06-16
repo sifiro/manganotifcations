@@ -20,19 +20,29 @@ import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
 public class Main {
 	static ArrayList <Manga> coll = new ArrayList <Manga>();
-    final String template="https://www.mangaupdates.com/series.html?id=";
+    final String pages[]={"https://www.mangaupdates.com/series.html?id="};
+    final String cod[] = {"//*[@class='sContent'][7]/text()"};
     public Main(){
     }
 
     public void go() throws Exception{
+    	Document manga;
     	for (int i=0;i<coll.size();i++){
-    		System.out.println(get_vol(i));
+    		manga = clear(page(pages[0].substring(0)+coll.get(i).getID().substring(0)));
+    		System.out.println(coll.get(i).getName()+": "+get_vol(manga,cod[0]));
     	}	
     }
     
-    public int get_vol(int i) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException, XPatherException, Exception{
-    	String a =(xpath(clear(page(template.substring(0)+coll.get(i).getID().substring(0)))));
-    	return Integer.parseInt(a.substring(0, a.indexOf(' ')));
+    public int get_vol(Document i,String cod) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException, XPatherException, Exception{
+    	String a =xpath(i,cod);
+    	try{
+    	if (! a.isEmpty()){
+    	return Integer.parseInt(a.substring(0, a.indexOf(' ')));}
+    	else{System.out.println("No se ha obtenido ningun valor de la pagina");return -1;}
+    	}
+    	catch(Exception e){
+    		System.out.println("Error al Convertir a Numerico");return -1;
+    	}
     }
     
     public static void main(String[] args)throws Exception {
@@ -46,7 +56,8 @@ public class Main {
 	
     // This Function return a page in format HTML
     public String page(String url) throws Exception {
-    System.setProperty("java.protocol.handler.pkgs","javax.net.ssl.HttpsURLConnection");
+    try{
+    	System.setProperty("java.protocol.handler.pkgs","javax.net.ssl.HttpsURLConnection");
     	URL manga = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection)manga.openConnection();
 		StringBuilder sb = new StringBuilder();
@@ -56,20 +67,21 @@ public class Main {
         while((cp = page.read())!=-1){
                   sb.append((char)cp);
         }
-    return sb.toString();
+    return sb.toString();}
+    catch(Exception e){
+    	System.out.println("ERROR al obtener la pagina");return null;
+    }
     }
     
 	public Document clear(String page) throws XPatherException, ParserConfigurationException{
 		CleanerProperties props = new CleanerProperties();
 		props.setOmitComments(true);
 		HtmlCleaner cleaner = new HtmlCleaner();
-    	TagNode la = cleaner.clean(page);
-    	return new DomSerializer(new CleanerProperties()).createDOM(la);
+    	return new DomSerializer(new CleanerProperties()).createDOM(cleaner.clean(page));
 	}
 	
-    public String xpath(Document document) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException{
+    public String xpath(Document document,String cod) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException{
     //Hayate no Gotoku Example:
-    	String cod="//*[@class='sContent'][7]/text()";
     	XPathFactory xPathfactory = XPathFactory.newInstance();
 		XPath xpath = xPathfactory.newXPath();
 		XPathExpression expr = xpath.compile(cod);
