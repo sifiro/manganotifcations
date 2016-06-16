@@ -1,6 +1,6 @@
 package manganotifications;
 
-import org.htmlcleaner.*;
+// Get_web Stuff
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,6 +8,12 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+//HTMLCleaner Stuff
+import org.htmlcleaner.CleanerProperties;
+import org.htmlcleaner.DomSerializer;
+import org.htmlcleaner.HtmlCleaner;
+import org.htmlcleaner.XPatherException;
 
 //XPath Stuff
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,7 +26,10 @@ import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
 public class Main {
 	static ArrayList <Manga> coll = new ArrayList <Manga>();
+	//Maybe I Need implement a ArrayList with websites supported (?)
+	//WebSites Supported
     final String pages[]={"https://www.mangaupdates.com/series.html?id="};
+    //XPath for-each website 
     final String cod[] = {"//*[@class='sContent'][7]/text()"};
     public Main(){
     }
@@ -55,6 +64,8 @@ public class Main {
     }
 	
     // This Function return a page in format HTML
+    // @param url in a String
+    // @return a website into a String
     public String page(String url) throws Exception {
     try{
     	System.setProperty("java.protocol.handler.pkgs","javax.net.ssl.HttpsURLConnection");
@@ -62,7 +73,6 @@ public class Main {
         HttpsURLConnection con = (HttpsURLConnection)manga.openConnection();
 		StringBuilder sb = new StringBuilder();
         BufferedReader page = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        //String inputLine;
         int cp;
         while((cp = page.read())!=-1){
                   sb.append((char)cp);
@@ -73,7 +83,10 @@ public class Main {
     }
     }
     
-	public Document clear(String page) throws XPatherException, ParserConfigurationException{
+    //Clear a HTML Page not well-formed to a w3c Document
+    //@param HTML Page in a String (You can use page function for obtain it)
+    //@return A w3c Document
+	public Document clear(String page) throws ParserConfigurationException{
 		CleanerProperties props = new CleanerProperties();
 		props.setOmitComments(true);
 		HtmlCleaner cleaner = new HtmlCleaner();
@@ -81,7 +94,6 @@ public class Main {
 	}
 	
     public String xpath(Document document,String cod) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException{
-    //Hayate no Gotoku Example:
     	XPathFactory xPathfactory = XPathFactory.newInstance();
 		XPath xpath = xPathfactory.newXPath();
 		XPathExpression expr = xpath.compile(cod);
