@@ -1,19 +1,21 @@
 package manganotifications;
+
 import org.htmlcleaner.*;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.io.*;
 import javax.net.ssl.HttpsURLConnection;
-import javax.xml.xpath.*;
-
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+//XPath Stuff
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import java.util.ArrayList;
 public class Main {
@@ -45,11 +47,10 @@ public class Main {
     // This Function return a page in format HTML
     public String page(String url) throws Exception {
     System.setProperty("java.protocol.handler.pkgs","javax.net.ssl.HttpsURLConnection");
-    URL manga = new URL(url);
+    	URL manga = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection)manga.openConnection();
-        InputStreamReader isr = new InputStreamReader(con.getInputStream());
 		StringBuilder sb = new StringBuilder();
-        BufferedReader page = new BufferedReader(isr);
+        BufferedReader page = new BufferedReader(new InputStreamReader(con.getInputStream()));
         //String inputLine;
         int cp;
         while((cp = page.read())!=-1){
