@@ -68,7 +68,7 @@ public class Main {
     // @return a website into a String
     public String page(String url) throws Exception {
     try{
-    	System.setProperty("java.protocol.handler.pkgs","javax.net.ssl.HttpsURLConnection");
+    	//System.setProperty("java.protocol.handler.pkgs","javax.net.ssl.HttpsURLConnection");
     	URL manga = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection)manga.openConnection();
 		StringBuilder sb = new StringBuilder();
@@ -79,7 +79,7 @@ public class Main {
         }
     return sb.toString();}
     catch(Exception e){
-    	System.out.println("ERROR al obtener la pagina");return null;
+    	System.out.println("ERROR al obtener la pagina\n"+e);return "";
     }
     }
     
