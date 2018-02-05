@@ -68,11 +68,8 @@ public class Main {
     // @return a website into a String
     public String page(String url) throws Exception {
     try{
-    	//System.setProperty("java.protocol.handler.pkgs","javax.net.ssl.HttpsURLConnection");
-    	URL manga = new URL(url);
-        HttpsURLConnection con = (HttpsURLConnection)manga.openConnection();
 		StringBuilder sb = new StringBuilder();
-        BufferedReader page = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        BufferedReader page = new BufferedReader(new InputStreamReader(((HttpsURLConnection)new URL(url).openConnection()).getInputStream()));
         int cp;
         while((cp = page.read())!=-1){
                   sb.append((char)cp);
@@ -87,10 +84,7 @@ public class Main {
     //@param HTML Page in a String (You can use page function for obtain it)
     //@return A w3c Document
 	public Document clear(String page) throws ParserConfigurationException{
-		CleanerProperties props = new CleanerProperties();
-		props.setOmitComments(true);
-		HtmlCleaner cleaner = new HtmlCleaner();
-    	return new DomSerializer(new CleanerProperties()).createDOM(cleaner.clean(page));
+    	return new DomSerializer(new CleanerProperties()).createDOM(new HtmlCleaner().clean(page));
 	}
 	
     public String xpath(Document document,String cod) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException{
